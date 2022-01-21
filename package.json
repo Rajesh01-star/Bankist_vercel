@@ -19,6 +19,7 @@
     "lodash": "^4.17.21",
     "mongodb": "^4.2.2",
     "mongoose": "^6.1.2",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "reload": "^3.2.0"
   }
 }

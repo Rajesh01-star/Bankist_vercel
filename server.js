@@ -6,6 +6,7 @@ const ejs = require("ejs");
 const { pin } = require("nodemon/lib/version");
 const https = require("https");
 const { min } = require("lodash");
+const reload = require("reload");
 
 mongoose.connect(
   "mongodb+srv://Atharv-admin:amhustle01@cluster0.7sm6f.mongodb.net/Bank",
@@ -17,7 +18,7 @@ mongoose.connect(
 
 const BankSchema = new mongoose.Schema({
   owner: String,
-  movements: [],
+  movements: { type: [Number], required: true },
   interestRate: Number,
   pin: Number,
   ini: String,
@@ -89,7 +90,10 @@ app.get("/holder/:topic", function (req, res) {
         }
       );
     }
-    res.render("holder", { Person: details });
+    const renderPage = function () {
+      res.render("holder", { Person: details });
+    };
+    setTimeout(renderPage, 3000);
   });
 });
 
@@ -168,6 +172,7 @@ app.post("/", function (req, res) {
         );
       } else {
         console.log(`Requested amount is too much for your credit`);
+        res.redirect(`/holder/:${hiddenInitials}`);
       }
     });
   }

@@ -1,3 +1,9 @@
+// refresh the page function
+function refresh() {
+  window.location.reload();
+}
+
+// setTimeout(refresh, 2000);
 // Elements
 const labelWelcome = document.querySelector(".welcome");
 const labelDate = document.querySelector(".date");
