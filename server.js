@@ -90,10 +90,7 @@ app.get("/holder/:topic", function (req, res) {
         }
       );
     }
-    const renderPage = function () {
-      res.render("holder", { Person: details });
-    };
-    setTimeout(renderPage, 3000);
+    res.render("holder", { Person: details });
   });
 });
 
@@ -209,7 +206,12 @@ app.post("/", function (req, res) {
   }
 
   if (openDemo) {
-    res.redirect(`/holder/:ak`);
+    Bank.find({ ini: "ak" }, function (err, foundUser) {
+      if (err) console.log(`openDemo err - ${err}`);
+      else {
+        res.render("holder", { Person: foundUser });
+      }
+    });
   }
 
   if (signUp) {
@@ -225,6 +227,8 @@ app.post("/", function (req, res) {
       interestRate: 1.5,
       pin: Pin,
       ini: Initials,
+      positive: Balance,
+      negative: 0,
     };
     Bank.create(newUser, function (err, result) {
       if (err) console.log(err);
