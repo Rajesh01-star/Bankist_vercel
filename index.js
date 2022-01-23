@@ -68,8 +68,19 @@ app.get("/", function (req, res) {
   res.render("index");
 });
 
+app.get("/page/:topic", (req, res) => {
+  const user = req.params.topic.slice(1);
+  Bank.find({ ini: user }, (err, details) => {
+    if (err) console.log(err);
+    else {
+      res.render("holder", { Person: details });
+    }
+  });
+});
+
 app.get("/holder/:topic", function (req, res) {
   const curOwner = req.params.topic.slice(1);
+  console.log(`here :${curOwner}`);
   Bank.find({ ini: curOwner }, function (err, details) {
     if (err) console.log(`68 - ${err}`);
     else {
@@ -90,7 +101,7 @@ app.get("/holder/:topic", function (req, res) {
         }
       );
     }
-    res.render("holder", { Person: details });
+    res.redirect(`/page/:${details[0].ini}`);
   });
 });
 
@@ -205,15 +216,6 @@ app.post("/", function (req, res) {
     res.redirect("/signIn");
   }
 
-  if (openDemo) {
-    Bank.find({ ini: "ak" }, function (err, foundUser) {
-      if (err) console.log(`openDemo err - ${err}`);
-      else {
-        res.render("holder", { Person: foundUser });
-      }
-    });
-  }
-
   if (signUp) {
     console.log(`Username = ${Username} , Pin = ${Pin} , Balance = ${Balance}`);
     let Initials = Username.toLowerCase()
@@ -224,6 +226,7 @@ app.post("/", function (req, res) {
     const newUser = {
       owner: Username,
       movements: [Balance],
+      balance: Balance,
       interestRate: 1.5,
       pin: Pin,
       ini: Initials,
@@ -236,7 +239,7 @@ app.post("/", function (req, res) {
         console.log(`Congrats the newUser has been added to the database`);
       }
     });
-    console.log(openDemo);
+    console.log(`signUp`);
     res.redirect(`/holder/:${Initials}`);
   }
 
@@ -259,6 +262,15 @@ app.post("/", function (req, res) {
     //   });
     //
   }
+});
+
+app.post("/demo", (req, res) => {
+  Bank.find({ ini: "ak" }, (err, foundUser) => {
+    if (err) console.log(err);
+    else {
+      res.render("holder", { Person: foundUser });
+    }
+  });
 });
 
 let port = process.env.PORT;
